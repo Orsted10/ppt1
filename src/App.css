@@ -63,3 +63,9 @@
   stroke: currentColor;
   fill: none;
 }
+
+.slide-container {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
