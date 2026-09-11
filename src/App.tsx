@@ -4,6 +4,8 @@ import { useKeyPress } from './hooks/useKeyPress';
 import { NavUI } from './components/NavUI';
 import { CustomCursor } from './components/CustomCursor';
 import { DataStreamBackground } from './components/DataStreamBackground';
+import { DataHUD } from './components/DataHUD';
+import { ScannerSweep } from './components/ScannerSweep';
 import gsap from 'gsap';
 
 import Slide1 from './slides/Slide1';
@@ -40,18 +42,57 @@ function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [totalStepsInCurrentSlide, setTotalStepsInCurrentSlide] = useState(1);
-  const shutterRef = useRef<HTMLDivElement>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const slideContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Throttle wheel events
+  const lastWheelTime = useRef(0);
+
+  const triggerCinematicTransition = (callback: () => void, direction: 'forward' | 'backward') => {
+    setIsTransitioning(true);
+    const container = slideContainerRef.current;
+    
+    // Scale out to the background
+    gsap.to(container, {
+      scale: direction === 'forward' ? 0.8 : 1.2,
+      opacity: 0,
+      filter: 'blur(15px)',
+      duration: 0.6,
+      ease: 'power3.inOut',
+      onComplete: () => {
+        callback(); // Update React State
+        
+        // Prepare for fly-in
+        gsap.set(container, { 
+          scale: direction === 'forward' ? 1.2 : 0.8, 
+          filter: 'blur(15px)',
+          opacity: 0
+        });
+
+        // Fly in from foreground
+        gsap.to(container, {
+          scale: 1,
+          opacity: 1,
+          filter: 'blur(0px)',
+          duration: 1,
+          ease: 'power3.out',
+          onComplete: () => {
+            setIsTransitioning(false);
+          }
+        });
+      }
+    });
+  };
 
   const nextAction = () => {
     if (isTransitioning) return;
     if (currentStep < totalStepsInCurrentSlide - 1) {
       setCurrentStep((prev) => prev + 1);
     } else if (currentSlide < SLIDES.length - 1) {
-      triggerSlideTransition(() => {
+      triggerCinematicTransition(() => {
         setCurrentSlide((prev) => prev + 1);
         setCurrentStep(0);
-      });
+      }, 'forward');
     }
   };
 
@@ -60,38 +101,42 @@ function App() {
     if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
     } else if (currentSlide > 0) {
-      triggerSlideTransition(() => {
+      triggerCinematicTransition(() => {
         setCurrentSlide((prev) => prev - 1);
-        setCurrentStep(0);
-      });
+        setCurrentStep(0); // We could set this to max steps of previous slide, but 0 is safer for now
+      }, 'backward');
     }
-  };
-
-  const triggerSlideTransition = (callback: () => void) => {
-    setIsTransitioning(true);
-    const shutter = shutterRef.current;
-    
-    // Brutalist Wipe Down
-    gsap.fromTo(shutter, 
-      { scaleY: 0, transformOrigin: 'top' }, 
-      { scaleY: 1, duration: 0.4, ease: 'expo.inOut', onComplete: () => {
-        callback();
-        // Wipe away
-        gsap.to(shutter, { scaleY: 0, transformOrigin: 'bottom', duration: 0.4, ease: 'expo.inOut', delay: 0.1, onComplete: () => {
-          setIsTransitioning(false);
-        }});
-      }}
-    );
   };
 
   useKeyPress('ArrowRight', nextAction);
   useKeyPress('ArrowLeft', prevAction);
   useKeyPress(' ', nextAction);
 
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      const now = Date.now();
+      if (now - lastWheelTime.current < 1500) return; // Wait 1.5s between wheel triggers
+      if (isTransitioning) return;
+
+      if (e.deltaY > 50) {
+        lastWheelTime.current = now;
+        nextAction();
+      } else if (e.deltaY < -50) {
+        lastWheelTime.current = now;
+        prevAction();
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel);
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [currentSlide, currentStep, isTransitioning, totalStepsInCurrentSlide]);
+
   return (
     <main className="cinematic-frame">
       <CustomCursor />
       <DataStreamBackground />
+      <DataHUD />
+      <ScannerSweep />
 
       {/* Background Grid */}
       <div className="bg-grid"></div>
@@ -111,29 +156,20 @@ function App() {
         slideTitles={SLIDE_TITLES}
       />
       
-      {/* The Shutter overlay for transitions */}
-      <div 
-        ref={shutterRef}
-        style={{
-          position: 'absolute', inset: 0, backgroundColor: 'var(--accent-primary)',
-          zIndex: 9000, scaleY: 0, transformOrigin: 'top'
-        }}
-      >
-         <div className="mono-text" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#000', fontSize: '2rem' }}>PROCESSING...</div>
+      <div ref={slideContainerRef} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
+        {SLIDES.map((SlideComponent, index) => {
+          return (
+            <SlideComponent
+              key={index}
+              isActive={index === currentSlide}
+              currentStep={index === currentSlide ? currentStep : 0}
+              onTotalStepsChange={
+                index === currentSlide ? setTotalStepsInCurrentSlide : () => {}
+              }
+            />
+          );
+        })}
       </div>
-      
-      {SLIDES.map((SlideComponent, index) => {
-        return (
-          <SlideComponent
-            key={index}
-            isActive={index === currentSlide}
-            currentStep={index === currentSlide ? currentStep : 0}
-            onTotalStepsChange={
-              index === currentSlide ? setTotalStepsInCurrentSlide : () => {}
-            }
-          />
-        );
-      })}
     </main>
   );
 }
