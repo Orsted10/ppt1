@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { scrambleText } from '../utils/scrambleText';
 
 const Slide4: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,16 +20,12 @@ const Slide4: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
       gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.8 });
       gsap.set(titleRef.current, { y: -30, opacity: 0 });
       gsap.to(titleRef.current, { y: 0, opacity: 1, duration: 1, delay: 0.2 });
+      if (titleRef.current) scrambleText(titleRef.current, "TARGET IDENTIFICATION", 1200);
 
       dotsRef.current.forEach((dot) => {
         if (!dot) return;
         gsap.to(dot, {
-          x: 'random(-100, 100)',
-          y: 'random(-100, 100)',
-          duration: 'random(1, 3)',
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut'
+          x: 'random(-150, 150)', y: 'random(-150, 150)', duration: 'random(1, 3)', repeat: -1, yoyo: true, ease: 'sine.inOut'
         });
       });
       
@@ -49,11 +46,8 @@ const Slide4: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
     if (currentStep === 1) {
       gsap.killTweensOf(targetDot);
       gsap.to(targetDot, {
-        scale: 2,
-        backgroundColor: 'var(--accent-primary)',
-        x: 0, y: 0,
-        duration: 0.5,
-        ease: 'expo.out'
+        scale: 3, backgroundColor: 'var(--accent-primary)',
+        x: 0, y: 0, duration: 0.5, ease: 'expo.out'
       });
       dotsRef.current.forEach((dot, i) => {
         if (i !== 4) gsap.to(dot, { opacity: 0.1, duration: 0.5 });
@@ -74,9 +68,7 @@ const Slide4: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
       gsap.to(targetDot, { scale: 1, backgroundColor: 'var(--text-muted)', duration: 0.5 });
       dotsRef.current.forEach((dot) => {
         gsap.to(dot, { opacity: 1, duration: 0.5 });
-        gsap.to(dot, {
-          x: 'random(-100, 100)', y: 'random(-100, 100)', duration: 'random(1, 3)', repeat: -1, yoyo: true, ease: 'sine.inOut'
-        });
+        gsap.to(dot, { x: 'random(-150, 150)', y: 'random(-150, 150)', duration: 'random(1, 3)', repeat: -1, yoyo: true, ease: 'sine.inOut' });
       });
     }
   }, [currentStep, isActive]);
@@ -89,34 +81,22 @@ const Slide4: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
         </h2>
 
         <div style={{ display: 'flex', height: '50vh', position: 'relative' }}>
-          <div ref={targetAreaRef} style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
+          <div ref={targetAreaRef} className="interactable" style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)', overflow: 'hidden' }}>
             <div className="mono-text" style={{ position: 'absolute', top: '1rem', left: '1rem', color: 'var(--text-muted)', fontSize: '0.75rem' }}>// SCANNING_GENOME_DB</div>
             {Array.from({ length: 40 }).map((_, i) => (
               <div
                 key={i}
                 ref={el => el && (dotsRef.current[i] = el)}
                 style={{
-                  position: 'absolute',
-                  width: '4px',
-                  height: '4px',
-                  backgroundColor: 'var(--text-muted)',
-                  top: `${20 + Math.random() * 60}%`,
-                  left: `${20 + Math.random() * 60}%`,
-                  zIndex: i === 4 ? 2 : 1
+                  position: 'absolute', width: '4px', height: '4px', backgroundColor: 'var(--text-muted)',
+                  top: `50%`, left: `50%`, zIndex: i === 4 ? 2 : 1
                 }}
               />
             ))}
           </div>
 
           <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <div 
-              ref={lineRef}
-              style={{
-                position: 'absolute', left: 0, top: '50%', width: '100px', height: '1px',
-                backgroundColor: 'var(--accent-primary)',
-              }}
-            />
-            
+            <div ref={lineRef} style={{ position: 'absolute', left: 0, top: '50%', width: '100px', height: '1px', backgroundColor: 'var(--accent-primary)' }} />
             <div ref={infoRef} className="tech-panel" style={{ marginLeft: '100px', width: 'calc(100% - 100px)' }}>
               <h3 className="mono-text" style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--accent-primary)' }}>TARGET_LOCK: KINASE_P38</h3>
               <p style={{ color: 'var(--text-color)', lineHeight: 1.8 }}>

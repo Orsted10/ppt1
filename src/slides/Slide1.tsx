@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { scrambleText } from '../utils/scrambleText';
 
 const Slide1: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -8,11 +9,8 @@ const Slide1: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
   const titleRef = useRef<HTMLHeadingElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLSpanElement>(null);
 
-  // Steps:
-  // 0: title and subtitle
-  // 1: reveal visual (tech core)
-  // 2: reveal extra text
   useEffect(() => {
     onTotalStepsChange(3);
   }, [onTotalStepsChange]);
@@ -26,6 +24,10 @@ const Slide1: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
       
       gsap.to(subtitleRef.current, { x: 0, opacity: 1, duration: 0.8, ease: 'power4.out', delay: 0.2 });
       gsap.to(titleRef.current, { x: 0, opacity: 1, duration: 1, ease: 'power4.out', delay: 0.4 });
+      
+      if (titleRef.current) scrambleText(titleRef.current, "THE DAWN\nOF A NEW ERA", 1500);
+
+      gsap.to(cursorRef.current, { opacity: 0, duration: 0.1, repeat: -1, yoyo: true, repeatDelay: 0.4 });
     } else {
       gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.5 });
     }
@@ -35,9 +37,7 @@ const Slide1: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
     if (!isActive) return;
 
     if (currentStep === 1) {
-      gsap.to(visualRef.current, {
-        scale: 1, opacity: 1, rotation: 0, duration: 1.2, ease: 'expo.out'
-      });
+      gsap.to(visualRef.current, { scale: 1, opacity: 1, rotation: 0, duration: 1.2, ease: 'expo.out' });
     }
 
     if (currentStep === 2) {
@@ -52,7 +52,6 @@ const Slide1: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
     if (currentStep < 1) {
       gsap.to(visualRef.current, { opacity: 0, scale: 0.8, rotation: 45, duration: 0.4 });
     }
-
   }, [currentStep, isActive]);
 
   return (
@@ -66,8 +65,8 @@ const Slide1: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
           <h1 ref={titleRef} style={{ fontSize: '5.5rem', marginBottom: '2rem', lineHeight: 1 }}>
             THE DAWN <br/>OF A NEW ERA
           </h1>
-          <div ref={textRef} className="tech-panel" style={{ marginTop: '3rem', maxWidth: '600px' }}>
-            <p className="mono-text" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>SYSTEM_LOG: MEDICAL REVOLUTION</p>
+          <div ref={textRef} className="tech-panel interactable" style={{ marginTop: '3rem', maxWidth: '600px' }}>
+            <p className="mono-text" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>SYSTEM_LOG: MEDICAL REVOLUTION <span ref={cursorRef} style={{ backgroundColor: 'var(--text-color)', width: '8px', height: '12px', display: 'inline-block' }}></span></p>
             <p style={{ fontSize: '1.25rem' }}>
               For decades, discovering a new drug has been a grueling marathon. But we are standing at the edge of a revolution, where artificial intelligence collapses timelines and reimagines the possibilities of human health.
             </p>
@@ -75,7 +74,7 @@ const Slide1: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
         </div>
 
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-          <div ref={visualRef} style={{ width: '400px', height: '400px', border: '1px solid var(--accent-primary)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div ref={visualRef} className="interactable" style={{ width: '400px', height: '400px', border: '1px solid var(--accent-primary)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ position: 'absolute', inset: '1rem', border: '1px dashed var(--text-muted)' }}></div>
             <div style={{ width: '50%', height: '50%', backgroundColor: 'var(--accent-primary)', filter: 'blur(60px)', opacity: 0.5 }}></div>
             <div className="mono-text" style={{ position: 'absolute', bottom: '-2rem', right: 0, fontSize: '0.75rem', color: 'var(--text-muted)' }}>DATA_CORE_ACTIVE</div>

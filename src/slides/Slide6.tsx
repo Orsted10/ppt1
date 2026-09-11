@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { scrambleText } from '../utils/scrambleText';
 
 const Slide6: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,6 +20,7 @@ const Slide6: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
       gsap.set([numberRef.current, unitRef.current], { scale: 0.9, opacity: 0 });
 
       gsap.to(titleRef.current, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', delay: 0.2 });
+      if (titleRef.current) scrambleText(titleRef.current, "VIRTUAL SCREENING", 1000);
     } else {
       gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.5 });
     }
@@ -45,12 +47,11 @@ const Slide6: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
       gsap.to([numberRef.current, unitRef.current], { scale: 0.9, opacity: 0, duration: 0.3 });
       if (numberRef.current) numberRef.current.innerText = "0";
     }
-
   }, [currentStep, isActive]);
 
   return (
     <div ref={containerRef} className="slide-container" style={{ zIndex: isActive ? 10 : 1 }}>
-      <div className="slide-content" style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <div className="slide-content interactable" style={{ alignItems: 'center', justifyContent: 'center' }}>
         <h2 ref={titleRef} style={{ fontSize: '3rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
           VIRTUAL SCREENING
         </h2>
@@ -63,7 +64,6 @@ const Slide6: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
             COMPOUNDS / SEC
           </div>
         </div>
-
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { scrambleText } from '../utils/scrambleText';
 
 const Slide15: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,6 +18,8 @@ const Slide15: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
       gsap.set(titleRef.current, { opacity: 0, scale: 0.9 });
       gsap.set(pulseRef.current, { scale: 0, opacity: 0 });
       gsap.to(titleRef.current, { opacity: 1, scale: 1, duration: 1.5, ease: 'expo.out', delay: 0.2 });
+      if (titleRef.current) scrambleText(titleRef.current, "THE FUTURE\nIS NOW", 1500);
+
     } else {
       gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.5 });
     }
@@ -39,9 +42,9 @@ const Slide15: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
     <div ref={containerRef} className="slide-container" style={{ zIndex: isActive ? 10 : 1 }}>
       <div className="slide-content" style={{ alignItems: 'center', justifyContent: 'center' }}>
         
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="interactable" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div ref={pulseRef} style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', border: '2px solid var(--accent-primary)', opacity: 0 }} />
-          <h1 ref={titleRef} style={{ fontSize: '6rem', textAlign: 'center', zIndex: 10, letterSpacing: '-0.02em' }}>
+          <h1 ref={titleRef} style={{ fontSize: '8rem', textAlign: 'center', zIndex: 10, letterSpacing: '-0.02em' }}>
             THE FUTURE<br/>IS NOW
           </h1>
         </div>

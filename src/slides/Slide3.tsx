@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { scrambleText } from '../utils/scrambleText';
 
 const Slide3: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,6 +23,8 @@ const Slide3: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
       gsap.set([text1Ref.current, text2Ref.current, text3Ref.current], { x: 50, opacity: 0 });
       
       gsap.to(titleRef.current, { x: 0, opacity: 1, duration: 1, ease: 'expo.out', delay: 0.2 });
+      if (titleRef.current) scrambleText(titleRef.current, "ENTER AI", 800);
+
       gsap.to(aiVisualRef.current, { scaleY: 1, opacity: 1, duration: 1.5, ease: 'expo.out', delay: 0.5 });
     } else {
       gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.5 });
@@ -51,17 +54,17 @@ const Slide3: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
           <h2 ref={titleRef} style={{ fontSize: '4.5rem', marginBottom: '4rem' }}>ENTER AI</h2>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <div ref={text1Ref} className="tech-panel">
+            <div ref={text1Ref} className="tech-panel interactable">
               <h3 className="mono-text" style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1rem' }}>[01] PATTERN RECOGNITION</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>AI algorithms sift through petabytes of genomic and clinical data to find hidden biological patterns impossible for humans to see.</p>
             </div>
             
-            <div ref={text2Ref} className="tech-panel">
+            <div ref={text2Ref} className="tech-panel interactable">
               <h3 className="mono-text" style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1rem' }}>[02] PREDICTIVE MODELING</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Instead of physical trial and error, AI predicts how a molecule will behave, bind, and interact within the human body.</p>
             </div>
             
-            <div ref={text3Ref} className="tech-panel">
+            <div ref={text3Ref} className="tech-panel interactable" style={{ borderColor: 'var(--accent-primary)' }}>
               <h3 className="mono-text" style={{ color: 'var(--accent-primary)', marginBottom: '0.5rem', fontSize: '1rem' }}>[03] GENERATIVE DESIGN</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Moving beyond discovery into creation—AI can "hallucinate" entirely new molecular structures that do not exist in nature.</p>
             </div>

@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { useKeyPress } from './hooks/useKeyPress';
 import { NavUI } from './components/NavUI';
+import { CustomCursor } from './components/CustomCursor';
+import { DataStreamBackground } from './components/DataStreamBackground';
+import gsap from 'gsap';
 
 import Slide1 from './slides/Slide1';
 import Slide2 from './slides/Slide2';
@@ -37,23 +40,48 @@ function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [totalStepsInCurrentSlide, setTotalStepsInCurrentSlide] = useState(1);
+  const shutterRef = useRef<HTMLDivElement>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const nextAction = () => {
+    if (isTransitioning) return;
     if (currentStep < totalStepsInCurrentSlide - 1) {
       setCurrentStep((prev) => prev + 1);
     } else if (currentSlide < SLIDES.length - 1) {
-      setCurrentSlide((prev) => prev + 1);
-      setCurrentStep(0);
+      triggerSlideTransition(() => {
+        setCurrentSlide((prev) => prev + 1);
+        setCurrentStep(0);
+      });
     }
   };
 
   const prevAction = () => {
+    if (isTransitioning) return;
     if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
     } else if (currentSlide > 0) {
-      setCurrentSlide((prev) => prev - 1);
-      setCurrentStep(0);
+      triggerSlideTransition(() => {
+        setCurrentSlide((prev) => prev - 1);
+        setCurrentStep(0);
+      });
     }
+  };
+
+  const triggerSlideTransition = (callback: () => void) => {
+    setIsTransitioning(true);
+    const shutter = shutterRef.current;
+    
+    // Brutalist Wipe Down
+    gsap.fromTo(shutter, 
+      { scaleY: 0, transformOrigin: 'top' }, 
+      { scaleY: 1, duration: 0.4, ease: 'expo.inOut', onComplete: () => {
+        callback();
+        // Wipe away
+        gsap.to(shutter, { scaleY: 0, transformOrigin: 'bottom', duration: 0.4, ease: 'expo.inOut', delay: 0.1, onComplete: () => {
+          setIsTransitioning(false);
+        }});
+      }}
+    );
   };
 
   useKeyPress('ArrowRight', nextAction);
@@ -62,6 +90,9 @@ function App() {
 
   return (
     <main className="cinematic-frame">
+      <CustomCursor />
+      <DataStreamBackground />
+
       {/* Background Grid */}
       <div className="bg-grid"></div>
 
@@ -79,6 +110,17 @@ function App() {
         totalSlides={SLIDES.length}
         slideTitles={SLIDE_TITLES}
       />
+      
+      {/* The Shutter overlay for transitions */}
+      <div 
+        ref={shutterRef}
+        style={{
+          position: 'absolute', inset: 0, backgroundColor: 'var(--accent-primary)',
+          zIndex: 9000, scaleY: 0, transformOrigin: 'top'
+        }}
+      >
+         <div className="mono-text" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#000', fontSize: '2rem' }}>PROCESSING...</div>
+      </div>
       
       {SLIDES.map((SlideComponent, index) => {
         return (

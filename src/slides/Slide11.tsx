@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { scrambleText } from '../utils/scrambleText';
 
 const Slide11: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,6 +17,8 @@ const Slide11: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
       gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.8 });
       gsap.set(titleRef.current, { opacity: 0 });
       gsap.to(titleRef.current, { opacity: 1, duration: 1, delay: 0.2 });
+      if (titleRef.current) scrambleText(titleRef.current, "MANUFACTURING & SCALE", 1200);
+
       gsap.set(beltRef.current, { opacity: 0, scaleX: 0, transformOrigin: 'left' });
     } else {
       gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.5 });
@@ -39,7 +42,7 @@ const Slide11: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
       <div className="slide-content">
         <h2 ref={titleRef} style={{ fontSize: '4.5rem', marginBottom: '4rem' }}>MANUFACTURING & SCALE</h2>
 
-        <div className="tech-panel" style={{ maxWidth: '800px', marginBottom: '4rem' }}>
+        <div className="tech-panel interactable" style={{ maxWidth: '800px', marginBottom: '4rem' }}>
           <p style={{ color: 'var(--text-color)' }}>
             AI optimizes the chemical synthesis pathways. What looks good on a computer screen must be physically manufacturable at a massive scale. AI determines the most efficient, cost-effective, and environmentally friendly way to synthesize the drug.
           </p>
@@ -50,7 +53,6 @@ const Slide11: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
             <div className="mono-text" style={{ position: 'absolute', top: '-2rem', right: '0', color: 'var(--accent-primary)', fontSize: '0.8rem' }}>SYNTHESIS_PATHWAY_OPTIMIZED</div>
           </div>
         </div>
-
       </div>
     </div>
   );
