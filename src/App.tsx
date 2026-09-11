@@ -133,14 +133,8 @@ function App() {
       {/* Background Grid */}
       <div className="bg-grid"></div>
 
-      {/* SVG Cinematic Grain Noise */}
-      <svg className="noise-overlay" preserveAspectRatio="none">
-        <filter id="cinematic-grain">
-          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"></feTurbulence>
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0"></feColorMatrix>
-        </filter>
-        <rect width="100%" height="100%" filter="url(#cinematic-grain)"></rect>
-      </svg>
+      {/* Noise overlay replaced by CSS background in index.css */}
+      <div className="noise-overlay"></div>
 
       <NavUI 
         currentSlide={currentSlide}
@@ -155,13 +149,13 @@ function App() {
           // Let's just render all of them but hide the ones that are totally inactive.
           const isVisible = index === currentSlide || index === prevSlideIndex;
 
-          return (
+          return isVisible ? (
             <div 
               key={index} 
               id={`slide-wrapper-${index}`}
+              className="gpu-accelerated"
               style={{
                 position: 'absolute', inset: 0,
-                display: isVisible ? 'block' : 'none',
                 zIndex: index === currentSlide ? 10 : (index === prevSlideIndex ? 5 : 1)
               }}
             >
@@ -173,7 +167,7 @@ function App() {
                 }
               />
             </div>
-          );
+          ) : null;
         })}
       </div>
     </main>

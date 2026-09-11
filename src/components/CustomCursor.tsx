@@ -11,13 +11,12 @@ export const CustomCursor: React.FC = () => {
     // Hide default cursor on the whole body
     document.body.style.cursor = 'none';
 
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.1, ease: "power2.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.1, ease: "power2.out" });
+
     const onMouseMove = (e: MouseEvent) => {
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-        ease: 'power2.out'
-      });
+      xTo(e.clientX);
+      yTo(e.clientY);
     };
 
     const onMouseDown = () => {
