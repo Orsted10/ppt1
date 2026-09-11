@@ -1,0 +1,65 @@
+/* NavUI styles */
+.nav-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 3rem;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.4), transparent);
+}
+
+.hud-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  pointer-events: auto;
+}
+
+.hud-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-primary);
+}
+
+.hud-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+.hud-subtext {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.crosshair {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  z-index: 40;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.crosshair-tl { top: 2rem; left: 2rem; transform: translate(-50%, -50%); }
+.crosshair-tr { top: 2rem; right: 2rem; transform: translate(50%, -50%); }
+.crosshair-bl { bottom: 2rem; left: 2rem; transform: translate(-50%, 50%); }
+.crosshair-br { bottom: 2rem; right: 2rem; transform: translate(50%, 50%); }
+
+.crosshair svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+}
