@@ -40,6 +40,8 @@ const SLIDE_TITLES = [
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [prevSlideIndex, setPrevSlideIndex] = useState(-1);
+  const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
   const [currentStep, setCurrentStep] = useState(0);
   const [totalStepsInCurrentSlide, setTotalStepsInCurrentSlide] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -48,51 +50,41 @@ function App() {
   // Throttle wheel events
   const lastWheelTime = useRef(0);
 
-  const triggerCinematicTransition = (callback: () => void, direction: 'forward' | 'backward') => {
-    setIsTransitioning(true);
-    const container = slideContainerRef.current;
-    
-    // Scale out to the background
-    gsap.to(container, {
-      scale: direction === 'forward' ? 0.8 : 1.2,
-      opacity: 0,
-      filter: 'blur(15px)',
-      duration: 0.6,
-      ease: 'power3.inOut',
-      onComplete: () => {
-        callback(); // Update React State
-        
-        // Prepare for fly-in
-        gsap.set(container, { 
-          scale: direction === 'forward' ? 1.2 : 0.8, 
-          filter: 'blur(15px)',
-          opacity: 0
-        });
+  // The actual cinematic 3D transition engine
+  useEffect(() => {
+    if (prevSlideIndex !== -1 && prevSlideIndex !== currentSlide) {
+      const prevWrapper = document.getElementById(`slide-wrapper-${prevSlideIndex}`);
+      const activeWrapper = document.getElementById(`slide-wrapper-${currentSlide}`);
+      
+      if (!prevWrapper || !activeWrapper) return;
 
-        // Fly in from foreground
-        gsap.to(container, {
-          scale: 1,
-          opacity: 1,
-          filter: 'blur(0px)',
-          duration: 1,
-          ease: 'power3.out',
-          onComplete: () => {
-            setIsTransitioning(false);
-          }
-        });
-      }
-    });
-  };
+      setIsTransitioning(true);
+
+      // Outgoing slide: pushes back, rotates in 3D, and slides away
+      gsap.fromTo(prevWrapper, 
+        { y: '0%', scale: 1, rotationX: 0, filter: 'brightness(1)' },
+        { y: direction === 'forward' ? '-100vh' : '100vh', scale: 0.7, rotationX: direction === 'forward' ? 20 : -20, filter: 'brightness(0.1)', duration: 1.6, ease: 'power4.inOut' }
+      );
+
+      // Incoming slide: comes from distance, rotates into place
+      gsap.fromTo(activeWrapper,
+        { y: direction === 'forward' ? '100vh' : '-100vh', scale: 0.7, rotationX: direction === 'forward' ? -20 : 20, filter: 'brightness(0.1)' },
+        { y: '0%', scale: 1, rotationX: 0, filter: 'brightness(1)', duration: 1.6, ease: 'power4.inOut', onComplete: () => {
+          setIsTransitioning(false);
+        }}
+      );
+    }
+  }, [currentSlide, prevSlideIndex, direction]);
 
   const nextAction = () => {
     if (isTransitioning) return;
     if (currentStep < totalStepsInCurrentSlide - 1) {
       setCurrentStep((prev) => prev + 1);
     } else if (currentSlide < SLIDES.length - 1) {
-      triggerCinematicTransition(() => {
-        setCurrentSlide((prev) => prev + 1);
-        setCurrentStep(0);
-      }, 'forward');
+      setDirection('forward');
+      setPrevSlideIndex(currentSlide);
+      setCurrentSlide((prev) => prev + 1);
+      setCurrentStep(0);
     }
   };
 
@@ -101,10 +93,10 @@ function App() {
     if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
     } else if (currentSlide > 0) {
-      triggerCinematicTransition(() => {
-        setCurrentSlide((prev) => prev - 1);
-        setCurrentStep(0); // We could set this to max steps of previous slide, but 0 is safer for now
-      }, 'backward');
+      setDirection('backward');
+      setPrevSlideIndex(currentSlide);
+      setCurrentSlide((prev) => prev - 1);
+      setCurrentStep(0);
     }
   };
 
@@ -156,17 +148,31 @@ function App() {
         slideTitles={SLIDE_TITLES}
       />
       
-      <div ref={slideContainerRef} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
+      <div ref={slideContainerRef} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, perspective: '1200px', overflow: 'hidden' }}>
         {SLIDES.map((SlideComponent, index) => {
+          // Only render active or transitioning slides to keep DOM light, but keep them mounted if needed.
+          // Wait, if we unmount them, the GSAP animation on the wrapper might fail if it's currently transitioning.
+          // Let's just render all of them but hide the ones that are totally inactive.
+          const isVisible = index === currentSlide || index === prevSlideIndex;
+
           return (
-            <SlideComponent
-              key={index}
-              isActive={index === currentSlide}
-              currentStep={index === currentSlide ? currentStep : 0}
-              onTotalStepsChange={
-                index === currentSlide ? setTotalStepsInCurrentSlide : () => {}
-              }
-            />
+            <div 
+              key={index} 
+              id={`slide-wrapper-${index}`}
+              style={{
+                position: 'absolute', inset: 0,
+                display: isVisible ? 'block' : 'none',
+                zIndex: index === currentSlide ? 10 : (index === prevSlideIndex ? 5 : 1)
+              }}
+            >
+              <SlideComponent
+                isActive={index === currentSlide}
+                currentStep={index === currentSlide ? currentStep : 0}
+                onTotalStepsChange={
+                  index === currentSlide ? setTotalStepsInCurrentSlide : () => {}
+                }
+              />
+            </div>
           );
         })}
       </div>
