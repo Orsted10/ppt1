@@ -1,13 +1,12 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { scrambleText } from '../utils/scrambleText';
+import { RefreshCw, Zap, Award } from 'lucide-react';
 
 const Slide10: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const boxRef = useRef<HTMLDivElement>(null);
-  const transformBoxRef = useRef<HTMLDivElement>(null);
+  const card1Ref = useRef<HTMLDivElement>(null);
+  const card2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     onTotalStepsChange(2);
@@ -15,16 +14,14 @@ const Slide10: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
 
   useEffect(() => {
     if (isActive) {
-      gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.8 });
-      gsap.set(titleRef.current, { opacity: 0 });
-      gsap.set([boxRef.current, transformBoxRef.current], { opacity: 0, x: -50 });
-
-      gsap.to(titleRef.current, { opacity: 1, duration: 1, delay: 0.2 });
-      if (titleRef.current) scrambleText(titleRef.current, "DRUG REPURPOSING", 1200);
-
-      gsap.to(boxRef.current, { opacity: 1, x: 0, duration: 1, ease: 'expo.out', delay: 0.4 });
+      gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.6 });
+      gsap.fromTo(
+        '.slide-10-elem',
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
+      );
     } else {
-      gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.5 });
+      gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.4 });
     }
   }, [isActive]);
 
@@ -32,35 +29,71 @@ const Slide10: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
     if (!isActive) return;
 
     if (currentStep === 1) {
-      gsap.to(transformBoxRef.current, { opacity: 1, x: 0, duration: 0.8, ease: 'expo.out' });
-      gsap.to(boxRef.current, { opacity: 0.3, duration: 0.8 });
-    }
-
-    if (currentStep < 1) {
-      gsap.to(transformBoxRef.current, { opacity: 0, x: -50, duration: 0.4 });
-      gsap.to(boxRef.current, { opacity: 1, duration: 0.4 });
+      gsap.to(card2Ref.current, { borderColor: 'var(--accent-emerald)', scale: 1.02, duration: 0.3 });
+      gsap.to(card1Ref.current, { opacity: 0.6, scale: 0.98, duration: 0.3 });
+    } else {
+      gsap.to([card1Ref.current, card2Ref.current], { borderColor: 'rgba(255, 255, 255, 0.08)', opacity: 1, scale: 1, duration: 0.3 });
     }
   }, [currentStep, isActive]);
 
   return (
-    <div ref={containerRef} className="slide-container" style={{ zIndex: isActive ? 10 : 1 }}>
+    <div ref={containerRef} className="slide-container">
       <div className="slide-content">
-        <h2 ref={titleRef} style={{ fontSize: '4.5rem', marginBottom: '4rem' }}>DRUG REPURPOSING</h2>
-
-        <div style={{ display: 'flex', gap: '4rem', alignItems: 'center' }}>
-          <div ref={boxRef} className="tech-panel interactable" style={{ flex: 1 }}>
-            <div className="mono-text" style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>KNOWN COMPOUND // SAFE</div>
-            <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>EXISTING DRUG</h3>
-            <p style={{ color: 'var(--text-muted)' }}>Originally designed for Disease A, it has already passed human safety trials but is currently sitting on the shelf.</p>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <div className="biotech-badge biotech-badge-emerald slide-10-elem">
+              <RefreshCw size={13} />
+              RAPID CRISIS INTERVENTION
+            </div>
+            <h2 className="gradient-title-emerald slide-10-elem" style={{ fontSize: '3.6rem', marginBottom: '0.75rem' }}>
+              DRUG REPURPOSING: SAVING LIVES IN 48 HOURS
+            </h2>
+            <p className="slide-10-elem" style={{ fontSize: '1.2rem', maxWidth: '780px', margin: '0 auto' }}>
+              When a global pandemic or emergency strikes, there is no time to wait 10 years for a new chemical. AI cross-analyzes already-approved medicines to discover immediate secondary cures.
+            </p>
           </div>
 
-          <div className="mono-text" style={{ fontSize: '2rem', color: 'var(--accent-primary)' }}>{'>>'}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2.5rem' }}>
+            <div ref={card1Ref} className="biotech-card slide-10-elem">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.75rem' }}>
+                <Zap size={18} />
+                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>THE ZERO-SAFETY DELAY ADVANTAGE</span>
+              </div>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#ffffff' }}>ALREADY PROVEN SAFE IN HUMANS</h3>
+              <p style={{ fontSize: '0.95rem' }}>
+                Over 4,000 FDA-approved drugs already have complete human safety and dosage data. If AI discovers an existing drug binds to a new virus or cancer receptor, it can enter human clinical use immediately.
+              </p>
+            </div>
 
-          <div ref={transformBoxRef} className="tech-panel interactable" style={{ flex: 1, borderColor: 'var(--accent-primary)' }}>
-            <div className="mono-text" style={{ color: 'var(--accent-primary)', marginBottom: '1rem' }}>AI DISCOVERY // MATCH FOUND</div>
-            <h3 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--accent-primary)' }}>NEW APPLICATION</h3>
-            <p style={{ color: 'var(--text-color)' }}>AI models discover that its molecular structure perfectly binds to the target for Disease B. A completely new treatment, ready in months instead of years.</p>
+            <div ref={card2Ref} className="biotech-card slide-10-elem" style={{ borderLeft: '3px solid var(--accent-emerald)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-emerald)', marginBottom: '0.75rem' }}>
+                <Award size={18} />
+                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>LANDMARK: BENEVOLENTAI & BARICITINIB</span>
+              </div>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#ffffff' }}>FROM VIRUS TO CURE IN 48 HOURS</h3>
+              <p style={{ fontSize: '0.95rem' }}>
+                In February 2020, BenevolentAI queried its knowledge graph for SARS-CoV-2 inhibitors. In <strong>48 hours</strong>, it predicted that <em>Baricitinib</em> (an arthritis drug) inhibited viral entry and dampened the fatal cytokine storm. Validated by the FDA, it saved countless critical patients.
+              </p>
+            </div>
           </div>
+
+          {/* Metric Bar */}
+          <div className="slide-10-elem" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+            <div className="stat-box">
+              <div className="stat-number" style={{ color: 'var(--accent-emerald)' }}>48 HRS</div>
+              <div className="stat-label">AI Prediction Timeline in 2020</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-number" style={{ color: 'var(--accent-cyan)' }}>4,000+</div>
+              <div className="stat-label">Approved Drugs Continually Researched</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-number" style={{ color: 'var(--accent-amber)' }}>38%</div>
+              <div className="stat-label">Mortality Reduction in Severe ICU Cases</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

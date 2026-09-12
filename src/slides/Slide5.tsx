@@ -1,106 +1,122 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { scrambleText } from '../utils/scrambleText';
+import { MolecularKey3D } from '../components/3d/MolecularKey3D';
+import { Wand2, Sparkles, Binary } from 'lucide-react';
 
 const Slide5: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  
-  const hex1Ref = useRef<HTMLDivElement>(null);
-  const hex2Ref = useRef<HTMLDivElement>(null);
-  const hex3Ref = useRef<HTMLDivElement>(null);
-  const hex4Ref = useRef<HTMLDivElement>(null);
-  const linesRef = useRef<HTMLDivElement[]>([]);
+  const card1Ref = useRef<HTMLDivElement>(null);
+  const card2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    onTotalStepsChange(5);
+    onTotalStepsChange(3);
   }, [onTotalStepsChange]);
 
   useEffect(() => {
     if (isActive) {
-      gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.8 });
-      gsap.set(titleRef.current, { y: -30, opacity: 0 });
-      gsap.set([hex1Ref.current, hex2Ref.current, hex3Ref.current, hex4Ref.current], { scale: 0, opacity: 0, rotation: -45 });
-      linesRef.current.forEach(l => gsap.set(l, { scaleX: 0 }));
-      
-      gsap.to(titleRef.current, { y: 0, opacity: 1, duration: 1, delay: 0.2 });
-      if (titleRef.current) scrambleText(titleRef.current, "MOLECULE GENERATION", 1200);
-
+      gsap.to(containerRef.current, { autoAlpha: 1, duration: 0.6 });
+      gsap.fromTo(
+        '.slide-5-elem',
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
+      );
     } else {
-      gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.5 });
+      gsap.to(containerRef.current, { autoAlpha: 0, duration: 0.4 });
     }
   }, [isActive]);
 
   useEffect(() => {
     if (!isActive) return;
 
-    if (currentStep === 1) gsap.to(hex1Ref.current, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.7)' });
-    if (currentStep === 2) {
-      gsap.to(linesRef.current[0], { scaleX: 1, duration: 0.3, transformOrigin: 'left' });
-      gsap.to(hex2Ref.current, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.7)', delay: 0.2 });
+    if (currentStep === 1) {
+      gsap.to(card1Ref.current, { borderColor: 'var(--accent-cyan)', scale: 1.02, duration: 0.3 });
+      gsap.to(card2Ref.current, { opacity: 0.5, scale: 0.98, duration: 0.3 });
+    } else if (currentStep === 2) {
+      gsap.to(card1Ref.current, { borderColor: 'rgba(255, 255, 255, 0.08)', opacity: 0.7, scale: 1, duration: 0.3 });
+      gsap.to(card2Ref.current, { borderColor: 'var(--accent-purple)', opacity: 1, scale: 1.02, duration: 0.3 });
+    } else {
+      gsap.to([card1Ref.current, card2Ref.current], { borderColor: 'rgba(255, 255, 255, 0.08)', opacity: 1, scale: 1, duration: 0.3 });
     }
-    if (currentStep === 3) {
-      gsap.to(linesRef.current[1], { scaleX: 1, duration: 0.3, transformOrigin: 'left' });
-      gsap.to(hex3Ref.current, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.7)', delay: 0.2 });
-    }
-    if (currentStep === 4) {
-      gsap.to(linesRef.current[2], { scaleX: 1, duration: 0.3, transformOrigin: 'left' });
-      gsap.to(hex4Ref.current, { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.7)', delay: 0.2 });
-      
-      gsap.to([hex1Ref.current, hex2Ref.current, hex3Ref.current, hex4Ref.current], {
-        borderColor: 'var(--accent-primary)',
-        color: 'var(--accent-primary)',
-        boxShadow: '0 0 20px rgba(198, 67, 43, 0.4)',
-        duration: 0.5, delay: 0.5
-      });
-    }
-
-    if (currentStep < 4) {
-      gsap.to(hex4Ref.current, { scale: 0, opacity: 0, rotation: -45, duration: 0.3 });
-      gsap.to(linesRef.current[2], { scaleX: 0, duration: 0.3 });
-      gsap.to([hex1Ref.current, hex2Ref.current, hex3Ref.current], { borderColor: 'var(--border)', color: 'var(--text-color)', boxShadow: 'none', duration: 0.3 });
-    }
-    if (currentStep < 3) {
-      gsap.to(hex3Ref.current, { scale: 0, opacity: 0, rotation: -45, duration: 0.3 });
-      gsap.to(linesRef.current[1], { scaleX: 0, duration: 0.3 });
-    }
-    if (currentStep < 2) {
-      gsap.to(hex2Ref.current, { scale: 0, opacity: 0, rotation: -45, duration: 0.3 });
-      gsap.to(linesRef.current[0], { scaleX: 0, duration: 0.3 });
-    }
-    if (currentStep < 1) gsap.to(hex1Ref.current, { scale: 0, opacity: 0, rotation: -45, duration: 0.3 });
-
   }, [currentStep, isActive]);
 
-  const hexStyle: React.CSSProperties = {
-    position: 'absolute', width: '60px', height: '69px', border: '2px solid var(--border)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontFamily: 'var(--font-mono)', fontSize: '1rem',
-    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-    backgroundColor: 'var(--bg-color)', zIndex: 2
-  };
-  
-  const lineStyle: React.CSSProperties = {
-    position: 'absolute', height: '2px', backgroundColor: 'var(--border)', zIndex: 1
-  };
-
   return (
-    <div ref={containerRef} className="slide-container" style={{ zIndex: isActive ? 10 : 1 }}>
-      <div className="slide-content" style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <h2 ref={titleRef} style={{ fontSize: '4.5rem', marginBottom: '4rem', textAlign: 'center' }}>
-          MOLECULE GENERATION
-        </h2>
+    <div ref={containerRef} className="slide-container">
+      <div className="slide-content">
+        <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: '3.5rem', alignItems: 'center' }}>
+          
+          {/* Left Column: Narrative & Insilico Case Study */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <div className="biotech-badge biotech-badge-purple slide-5-elem">
+                <Wand2 size={13} />
+                STEP 02 // GENERATIVE CHEMISTRY
+              </div>
+              <h2 className="gradient-title-purple slide-5-elem" style={{ fontSize: '3.6rem', lineHeight: 1.05, marginBottom: '1rem' }}>
+                CREATING MEDICINE ATOM BY ATOM
+              </h2>
+              <p className="slide-5-elem" style={{ fontSize: '1.15rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+                Traditional science searches through existing libraries. Generative AI does the impossible: it invents entirely new, tailor-made molecules designed to fit biological target pockets like custom keys into locks.
+              </p>
+            </div>
 
-        <div className="interactable" style={{ position: 'relative', width: '500px', height: '300px' }}>
-          <div className="mono-text" style={{ position: 'absolute', top: 0, left: 0, color: 'var(--text-muted)', fontSize: '0.75rem' }}>// GEN_MODEL: DIFFUSION</div>
-          <div ref={hex1Ref} style={{ ...hexStyle, top: '50%', left: '30%', transform: 'translate(-50%, -50%)' }}>C</div>
-          <div ref={el => { if (el) linesRef.current[0] = el; }} style={{ ...lineStyle, top: '50%', left: '30%', width: '100px', transform: 'rotate(-30deg)' }}></div>
-          <div ref={hex2Ref} style={{ ...hexStyle, top: 'calc(50% - 50px)', left: 'calc(30% + 86px)', transform: 'translate(-50%, -50%)' }}>N</div>
-          <div ref={el => { if (el) linesRef.current[1] = el; }} style={{ ...lineStyle, top: '50%', left: '30%', width: '100px', transform: 'rotate(30deg)' }}></div>
-          <div ref={hex3Ref} style={{ ...hexStyle, top: 'calc(50% + 50px)', left: 'calc(30% + 86px)', transform: 'translate(-50%, -50%)' }}>O</div>
-          <div ref={el => { if (el) linesRef.current[2] = el; }} style={{ ...lineStyle, top: 'calc(50% + 50px)', left: 'calc(30% + 86px)', width: '100px' }}></div>
-          <div ref={hex4Ref} style={{ ...hexStyle, top: 'calc(50% + 50px)', left: 'calc(30% + 186px)', transform: 'translate(-50%, -50%)' }}>H</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div ref={card1Ref} className="biotech-card slide-5-elem">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
+                  <Binary size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>MOLECULAR DIFFUSION MODELS</span>
+                </div>
+                <p style={{ fontSize: '0.95rem' }}>
+                  Just as AI image generators assemble pixels, chemical diffusion models (like RFdiffusion and Chroma) assemble atoms into stable, highly potent 3D therapeutic structures.
+                </p>
+              </div>
+
+              <div ref={card2Ref} className="biotech-card slide-5-elem" style={{ borderLeft: '3px solid var(--accent-purple)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-purple)', marginBottom: '0.4rem' }}>
+                  <Sparkles size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>LANDMARK: INSILICO MEDICINE (ISM001-055)</span>
+                </div>
+                <p style={{ fontSize: '0.95rem' }}>
+                  The world's first drug discovered and designed entirely by AI (for fatal pulmonary fibrosis) advanced from <strong>concept to Phase II clinical trials in only 30 months</strong>—saving 4 years and tens of millions of dollars.
+                </p>
+              </div>
+            </div>
+
+            <div className="slide-5-elem" style={{ display: 'flex', gap: '1rem' }}>
+              <div className="stat-box" style={{ flex: 1 }}>
+                <div className="stat-number" style={{ color: 'var(--accent-purple)', fontSize: '2.2rem' }}>30 MOS</div>
+                <div className="stat-label">Discovery to Phase II Trials</div>
+              </div>
+              <div className="stat-box" style={{ flex: 1 }}>
+                <div className="stat-number" style={{ color: 'var(--accent-cyan)', fontSize: '2.2rem' }}>10⁶⁰</div>
+                <div className="stat-label">Chemical Space Search Capacity</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: 3D Interactive Molecular Scaffold */}
+          <div className="slide-5-elem" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '100%', maxWidth: '480px', position: 'relative' }}>
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)',
+                borderRadius: '50%', filter: 'blur(50px)', zIndex: 0
+              }} />
+              <MolecularKey3D height="460px" accentColor="#8b5cf6" />
+              <div style={{
+                position: 'absolute', bottom: '0.5rem', left: '50%', transform: 'translateX(-50%)',
+                background: 'rgba(6, 8, 14, 0.85)', padding: '0.35rem 1rem', borderRadius: '9999px',
+                border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)',
+                display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap'
+              }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#8b5cf6', boxShadow: '0 0 8px #8b5cf6' }} />
+                <span className="mono-text" style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  3D GENERATIVE LIGAND SCAFFOLD
+                </span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
