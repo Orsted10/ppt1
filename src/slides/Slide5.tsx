@@ -95,11 +95,11 @@ const Slide5: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
         <div className="interactable" style={{ position: 'relative', width: '500px', height: '300px' }}>
           <div className="mono-text" style={{ position: 'absolute', top: 0, left: 0, color: 'var(--text-muted)', fontSize: '0.75rem' }}>// GEN_MODEL: DIFFUSION</div>
           <div ref={hex1Ref} style={{ ...hexStyle, top: '50%', left: '30%', transform: 'translate(-50%, -50%)' }}>C</div>
-          <div ref={el => el && (linesRef.current[0] = el)} style={{ ...lineStyle, top: '50%', left: '30%', width: '100px', transform: 'rotate(-30deg)' }}></div>
+          <div ref={el => { if (el) linesRef.current[0] = el; }} style={{ ...lineStyle, top: '50%', left: '30%', width: '100px', transform: 'rotate(-30deg)' }}></div>
           <div ref={hex2Ref} style={{ ...hexStyle, top: 'calc(50% - 50px)', left: 'calc(30% + 86px)', transform: 'translate(-50%, -50%)' }}>N</div>
-          <div ref={el => el && (linesRef.current[1] = el)} style={{ ...lineStyle, top: '50%', left: '30%', width: '100px', transform: 'rotate(30deg)' }}></div>
+          <div ref={el => { if (el) linesRef.current[1] = el; }} style={{ ...lineStyle, top: '50%', left: '30%', width: '100px', transform: 'rotate(30deg)' }}></div>
           <div ref={hex3Ref} style={{ ...hexStyle, top: 'calc(50% + 50px)', left: 'calc(30% + 86px)', transform: 'translate(-50%, -50%)' }}>O</div>
-          <div ref={el => el && (linesRef.current[2] = el)} style={{ ...lineStyle, top: 'calc(50% + 50px)', left: 'calc(30% + 86px)', width: '100px' }}></div>
+          <div ref={el => { if (el) linesRef.current[2] = el; }} style={{ ...lineStyle, top: 'calc(50% + 50px)', left: 'calc(30% + 86px)', width: '100px' }}></div>
           <div ref={hex4Ref} style={{ ...hexStyle, top: 'calc(50% + 50px)', left: 'calc(30% + 186px)', transform: 'translate(-50%, -50%)' }}>H</div>
         </div>
       </div>

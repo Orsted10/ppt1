@@ -44,17 +44,17 @@ const Slide12: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '800px' }}>
           
-          <div ref={el => el && (pointsRef.current[0] = el)} className="tech-panel interactable" style={{ borderLeft: '2px solid var(--accent-primary)' }}>
+          <div ref={el => { if (el) pointsRef.current[0] = el; }} className="tech-panel interactable" style={{ borderLeft: '2px solid var(--accent-primary)' }}>
             <div className="mono-text" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>// POST_MARKET_SURVEILLANCE</div>
             <p>The AI's job isn't done when the drug is approved. It continuously monitors real-world patient data post-launch.</p>
           </div>
 
-          <div ref={el => el && (pointsRef.current[1] = el)} className="tech-panel interactable" style={{ borderLeft: '2px solid var(--accent-primary)' }}>
+          <div ref={el => { if (el) pointsRef.current[1] = el; }} className="tech-panel interactable" style={{ borderLeft: '2px solid var(--accent-primary)' }}>
             <div className="mono-text" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>// FEEDBACK_LOOP</div>
             <p>It tracks long-term efficacy, extremely rare side effects, and unexpected benefits across millions of diverse patients.</p>
           </div>
 
-          <div ref={el => el && (pointsRef.current[2] = el)} className="tech-panel interactable" style={{ borderLeft: '2px solid var(--accent-primary)' }}>
+          <div ref={el => { if (el) pointsRef.current[2] = el; }} className="tech-panel interactable" style={{ borderLeft: '2px solid var(--accent-primary)' }}>
             <div className="mono-text" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>// CONTINUOUS_LEARNING</div>
             <p>This data feeds directly back into the AI models, making future predictions even more accurate.</p>
           </div>

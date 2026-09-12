@@ -53,7 +53,7 @@ const Slide9: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
           {[0, 1, 2].map(i => (
             <div
               key={i}
-              ref={el => el && (ringsRef.current[i] = el)}
+              ref={el => { if (el) ringsRef.current[i] = el; }}
               style={{ position: 'absolute', width: `${100 + i * 50}%`, height: `${100 + i * 50}%`, border: `1px dashed ${i === 0 ? 'var(--accent-primary)' : 'var(--text-muted)'}`, borderRadius: '50%' }}
             />
           ))}

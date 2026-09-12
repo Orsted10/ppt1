@@ -56,7 +56,7 @@ const Slide8: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
           {[1, 2, 3, 4, 5].map((_, i) => (
             <div
               key={i}
-              ref={el => el && (chartLinesRef.current[i] = el)}
+              ref={el => { if (el) chartLinesRef.current[i] = el; }}
               style={{ flex: 1, height: '100%', backgroundColor: i === 0 ? '#ef4444' : 'var(--accent-primary)', opacity: 0, position: 'relative' }}
             >
               <div className="mono-text" style={{ position: 'absolute', top: '-2rem', left: '50%', transform: 'translateX(-50%)', fontSize: '0.8rem', color: i === 0 ? '#ef4444' : 'var(--text-color)' }}>

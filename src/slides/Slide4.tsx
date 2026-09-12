@@ -86,7 +86,7 @@ const Slide4: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
             {Array.from({ length: 40 }).map((_, i) => (
               <div
                 key={i}
-                ref={el => el && (dotsRef.current[i] = el)}
+                ref={el => { if (el) dotsRef.current[i] = el; }}
                 style={{
                   position: 'absolute', width: '4px', height: '4px', backgroundColor: 'var(--text-muted)',
                   top: `50%`, left: `50%`, zIndex: i === 4 ? 2 : 1
