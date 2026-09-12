@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ChemicalSpaceCloud } from '../components/visuals/ChemicalSpaceCloud';
 import { ShieldCheck, Zap, FlaskConical } from 'lucide-react';
 
 const Slide6: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
@@ -53,62 +54,70 @@ const Slide6: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChang
   return (
     <div ref={containerRef} className="slide-container">
       <div className="slide-content">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: '3.5rem', alignItems: 'center' }}>
           
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div className="biotech-badge slide-6-elem">
-              <Zap size={13} />
-              STEP 03 // MASSIVE COMPUTATIONAL TESTING
-            </div>
-            <h2 className="gradient-title slide-6-elem" style={{ fontSize: '3.6rem', marginBottom: '0.75rem' }}>
-              VIRTUAL SCREENING AT PLANETARY SCALE
-            </h2>
-            <p className="slide-6-elem" style={{ fontSize: '1.2rem', maxWidth: '780px', margin: '0 auto' }}>
-              Instead of pipetting liquids in petri dishes for years, AI simulates how billions of molecules interact with diseases inside a digital supercomputer in seconds.
-            </p>
-          </div>
-
-          {/* Center Huge Counter Banner */}
-          <div className="biotech-card slide-6-elem" style={{
-            background: 'linear-gradient(135deg, rgba(0, 242, 254, 0.06) 0%, rgba(56, 189, 248, 0.03) 100%)',
-            border: '1px solid rgba(0, 242, 254, 0.3)', textAlign: 'center', padding: '2rem', marginBottom: '2rem'
-          }}>
-            <div className="mono-text" style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '0.5rem', letterSpacing: '0.2em' }}>
-              CURRENT AI SCREENING THROUGHPUT
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '1rem' }}>
-              <div ref={numberRef} style={{ fontSize: '5rem', fontWeight: 800, fontFamily: 'var(--font-display)', color: '#ffffff', lineHeight: 1 }}>
-                0
+          {/* Left Column: Planetary Scale Screening & MIT Case */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <div className="biotech-badge slide-6-elem">
+                <Zap size={13} />
+                STEP 03 // MASSIVE COMPUTATIONAL TESTING
               </div>
-              <div className="mono-text" style={{ fontSize: '1.4rem', color: 'var(--accent-cyan)', fontWeight: 700 }}>
-                COMPOUNDS / SEC
-              </div>
-            </div>
-          </div>
-
-          {/* Comparative Cards: Physical Wet Lab vs MIT Halicin Case */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-            <div ref={card1Ref} className="biotech-card slide-6-elem">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
-                <FlaskConical size={16} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>PHYSICAL HIGH-THROUGHPUT ROBOTICS</span>
-              </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem' }}>~100,000 / WEEK</div>
-              <p style={{ fontSize: '0.95rem' }}>
-                Requires millions in chemical reagents, physical multi-well plates, robotic arms, and weeks of lab technician oversight.
+              <h2 className="gradient-title slide-6-elem" style={{ fontSize: '3.5rem', lineHeight: 1.05, marginBottom: '0.85rem' }}>
+                VIRTUAL SCREENING AT PLANETARY SCALE
+              </h2>
+              <p className="slide-6-elem" style={{ fontSize: '1.15rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+                Instead of pipetting liquids in petri dishes for years, AI simulates how billions of molecules interact with diseases inside a digital supercomputer in seconds.
               </p>
             </div>
 
-            <div ref={card2Ref} className="biotech-card slide-6-elem" style={{ borderLeft: '3px solid var(--accent-emerald)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-emerald)', marginBottom: '0.5rem' }}>
-                <ShieldCheck size={16} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>REAL CASE: MIT'S HALICIN ANTIBIOTIC</span>
+            {/* Throughput Counter Banner */}
+            <div className="biotech-card slide-6-elem" style={{
+              background: 'linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(56, 189, 248, 0.03) 100%)',
+              border: '1px solid rgba(0, 242, 254, 0.35)', padding: '1.5rem 2rem'
+            }}>
+              <div className="mono-text" style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '0.25rem', letterSpacing: '0.15em' }}>
+                AI COMPUTATIONAL DOCKING VELOCITY
               </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--accent-emerald)', marginBottom: '0.25rem' }}>107 MILLION IN 3 DAYS</div>
-              <p style={{ fontSize: '0.95rem' }}>
-                MIT screened 107M compounds in 3 days, discovering <strong>Halicin</strong>—a revolutionary antibiotic that eradicated deadly, drug-resistant bacterial superbugs.
-              </p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem' }}>
+                <div ref={numberRef} style={{ fontSize: '3.6rem', fontWeight: 800, fontFamily: 'var(--font-display)', color: '#ffffff', lineHeight: 1 }}>
+                  0
+                </div>
+                <div className="mono-text" style={{ fontSize: '1.1rem', color: 'var(--accent-cyan)', fontWeight: 700 }}>
+                  COMPOUNDS / SEC
+                </div>
+              </div>
             </div>
+
+            {/* Comparative Cards: Physical Wet Lab vs MIT Halicin Case */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div ref={card1Ref} className="biotech-card slide-6-elem" style={{ padding: '1.25rem 1.4rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-dim)', marginBottom: '0.4rem' }}>
+                  <FlaskConical size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.7rem', fontWeight: 700 }}>WET LAB ROBOTICS</span>
+                </div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem' }}>~100,000 / WK</div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                  Constrained by physical multi-well plates, chemical reagent costs, and weeks of time.
+                </p>
+              </div>
+
+              <div ref={card2Ref} className="biotech-card slide-6-elem" style={{ padding: '1.25rem 1.4rem', borderLeft: '3px solid var(--accent-emerald)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-emerald)', marginBottom: '0.4rem' }}>
+                  <ShieldCheck size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.7rem', fontWeight: 700 }}>MIT'S HALICIN BREAKTHROUGH</span>
+                </div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--accent-emerald)', marginBottom: '0.25rem' }}>107M IN 3 DAYS</div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                  Discovered a potent antibiotic that wiped out drug-resistant superbugs in 72 hours.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: 3D Chemical Space Particle Cloud */}
+          <div className="slide-6-elem" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <ChemicalSpaceCloud />
           </div>
 
         </div>

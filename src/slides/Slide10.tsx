@@ -1,6 +1,7 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { KnowledgeGraph3D } from '../components/3d/KnowledgeGraph3D';
 import { RefreshCw, Zap, Award } from 'lucide-react';
 
 const Slide10: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
@@ -39,58 +40,77 @@ const Slide10: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
   return (
     <div ref={containerRef} className="slide-container">
       <div className="slide-content">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: '3.5rem', alignItems: 'center' }}>
           
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div className="biotech-badge biotech-badge-emerald slide-10-elem">
-              <RefreshCw size={13} />
-              RAPID CRISIS INTERVENTION
-            </div>
-            <h2 className="gradient-title-emerald slide-10-elem" style={{ fontSize: '3.6rem', marginBottom: '0.75rem' }}>
-              DRUG REPURPOSING: SAVING LIVES IN 48 HOURS
-            </h2>
-            <p className="slide-10-elem" style={{ fontSize: '1.2rem', maxWidth: '780px', margin: '0 auto' }}>
-              When a global pandemic or emergency strikes, there is no time to wait 10 years for a new chemical. AI cross-analyzes already-approved medicines to discover immediate secondary cures.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2.5rem' }}>
-            <div ref={card1Ref} className="biotech-card slide-10-elem">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.75rem' }}>
-                <Zap size={18} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>THE ZERO-SAFETY DELAY ADVANTAGE</span>
+          {/* Left Column: Narrative & BenevolentAI Case */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <div className="biotech-badge biotech-badge-emerald slide-10-elem">
+                <RefreshCw size={13} />
+                RAPID CRISIS INTERVENTION
               </div>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#ffffff' }}>ALREADY PROVEN SAFE IN HUMANS</h3>
-              <p style={{ fontSize: '0.95rem' }}>
-                Over 4,000 FDA-approved drugs already have complete human safety and dosage data. If AI discovers an existing drug binds to a new virus or cancer receptor, it can enter human clinical use immediately.
+              <h2 className="gradient-title-emerald slide-10-elem" style={{ fontSize: '3.5rem', lineHeight: 1.05, marginBottom: '0.85rem' }}>
+                DRUG REPURPOSING: SAVING LIVES IN 48 HOURS
+              </h2>
+              <p className="slide-10-elem" style={{ fontSize: '1.15rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+                When a global epidemic or aggressive emergency strikes, there is no time to invent a new chemical from scratch. AI cross-analyzes already-approved medicines to discover immediate secondary cures.
               </p>
             </div>
 
-            <div ref={card2Ref} className="biotech-card slide-10-elem" style={{ borderLeft: '3px solid var(--accent-emerald)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-emerald)', marginBottom: '0.75rem' }}>
-                <Award size={18} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>LANDMARK: BENEVOLENTAI & BARICITINIB</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div ref={card1Ref} className="biotech-card slide-10-elem">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
+                  <Zap size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>THE ZERO-SAFETY DELAY ADVANTAGE</span>
+                </div>
+                <p style={{ fontSize: '0.95rem' }}>
+                  Over <strong>4,000 FDA-approved drugs</strong> already have complete human clinical safety records. When AI discovers an existing drug targets a new disease, doctors can administer it immediately.
+                </p>
               </div>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#ffffff' }}>FROM VIRUS TO CURE IN 48 HOURS</h3>
-              <p style={{ fontSize: '0.95rem' }}>
-                In February 2020, BenevolentAI queried its knowledge graph for SARS-CoV-2 inhibitors. In <strong>48 hours</strong>, it predicted that <em>Baricitinib</em> (an arthritis drug) inhibited viral entry and dampened the fatal cytokine storm. Validated by the FDA, it saved countless critical patients.
-              </p>
+
+              <div ref={card2Ref} className="biotech-card slide-10-elem" style={{ borderLeft: '3px solid var(--accent-emerald)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-emerald)', marginBottom: '0.4rem' }}>
+                  <Award size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>LANDMARK: BENEVOLENTAI & BARICITINIB</span>
+                </div>
+                <p style={{ fontSize: '0.95rem' }}>
+                  In February 2020, BenevolentAI queried its knowledge graph. In <strong>48 hours</strong>, it predicted <em>Baricitinib</em> (an arthritis drug) stopped viral cellular entry and suppressed lethal lung inflammation. Validated by the FDA, it saved countless critical patients globally.
+                </p>
+              </div>
+            </div>
+
+            <div className="slide-10-elem" style={{ display: 'flex', gap: '1rem' }}>
+              <div className="stat-box" style={{ flex: 1 }}>
+                <div className="stat-number" style={{ color: 'var(--accent-emerald)', fontSize: '2.2rem' }}>48 HRS</div>
+                <div className="stat-label">From Virus to Discovered Cure</div>
+              </div>
+              <div className="stat-box" style={{ flex: 1 }}>
+                <div className="stat-number" style={{ color: 'var(--accent-cyan)', fontSize: '2.2rem' }}>38%</div>
+                <div className="stat-label">Mortality Reduction in Severe Cases</div>
+              </div>
             </div>
           </div>
 
-          {/* Metric Bar */}
-          <div className="slide-10-elem" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
-            <div className="stat-box">
-              <div className="stat-number" style={{ color: 'var(--accent-emerald)' }}>48 HRS</div>
-              <div className="stat-label">AI Prediction Timeline in 2020</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-number" style={{ color: 'var(--accent-cyan)' }}>4,000+</div>
-              <div className="stat-label">Approved Drugs Continually Researched</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-number" style={{ color: 'var(--accent-amber)' }}>38%</div>
-              <div className="stat-label">Mortality Reduction in Severe ICU Cases</div>
+          {/* Right Column: 3D Knowledge Graph Network */}
+          <div className="slide-10-elem" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '100%', maxWidth: '480px', position: 'relative' }}>
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)',
+                borderRadius: '50%', filter: 'blur(50px)', zIndex: 0
+              }} />
+              <KnowledgeGraph3D height="460px" accentColor="#10b981" />
+              <div style={{
+                position: 'absolute', bottom: '0.5rem', left: '50%', transform: 'translateX(-50%)',
+                background: 'rgba(6, 8, 14, 0.85)', padding: '0.35rem 1rem', borderRadius: '9999px',
+                border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)',
+                display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap'
+              }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
+                <span className="mono-text" style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  3D BIOMEDICAL KNOWLEDGE GRAPH
+                </span>
+              </div>
             </div>
           </div>
 

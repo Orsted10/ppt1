@@ -1,15 +1,15 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { Sparkles, Bot, Heart } from 'lucide-react';
+import { AutonomousLoop } from '../components/visuals/AutonomousLoop';
+import { Sparkles, Bot } from 'lucide-react';
 
 const Slide15: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const card1Ref = useRef<HTMLDivElement>(null);
-  const card2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    onTotalStepsChange(3);
+    onTotalStepsChange(2);
   }, [onTotalStepsChange]);
 
   useEffect(() => {
@@ -29,72 +29,62 @@ const Slide15: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
     if (!isActive) return;
 
     if (currentStep === 1) {
-      gsap.to(card1Ref.current, { borderColor: 'var(--accent-cyan)', scale: 1.02, duration: 0.3 });
-      gsap.to(card2Ref.current, { opacity: 0.5, scale: 0.98, duration: 0.3 });
-    } else if (currentStep === 2) {
-      gsap.to(card1Ref.current, { borderColor: 'rgba(255, 255, 255, 0.08)', opacity: 0.7, scale: 1, duration: 0.3 });
-      gsap.to(card2Ref.current, { borderColor: 'var(--accent-emerald)', opacity: 1, scale: 1.02, duration: 0.3 });
+      gsap.to(card1Ref.current, { borderColor: 'var(--accent-emerald)', scale: 1.02, duration: 0.3 });
     } else {
-      gsap.to([card1Ref.current, card2Ref.current], { borderColor: 'rgba(255, 255, 255, 0.08)', opacity: 1, scale: 1, duration: 0.3 });
+      gsap.to(card1Ref.current, { borderColor: 'rgba(255, 255, 255, 0.08)', scale: 1, duration: 0.3 });
     }
   }, [currentStep, isActive]);
 
   return (
     <div ref={containerRef} className="slide-container">
       <div className="slide-content">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', textAlign: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5rem', alignItems: 'center' }}>
           
-          <div className="biotech-badge slide-15-elem" style={{ margin: '0 auto 1.5rem auto' }}>
-            <Sparkles size={13} />
-            THE HORIZON // MEDICINE REBORN
-          </div>
-          
-          <h1 className="gradient-title slide-15-elem" style={{ fontSize: '4.4rem', lineHeight: 1.05, marginBottom: '1.25rem' }}>
-            THE FUTURE: ZERO-ATTRITION MEDICINE
-          </h1>
+          {/* Left Column: Grand Finale Vision */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <div className="biotech-badge slide-15-elem">
+                <Sparkles size={13} />
+                THE HORIZON // MEDICINE REBORN
+              </div>
+              <h1 className="gradient-title slide-15-elem" style={{ fontSize: '3.8rem', lineHeight: 1.05, marginBottom: '0.85rem' }}>
+                THE FUTURE: ZERO-ATTRITION MEDICINE
+              </h1>
+              <p className="slide-15-elem" style={{ fontSize: '1.2rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+                We are crossing the threshold from an era of treating illness reactively to an era of engineering cures proactively. In this new world, no disease is permanently incurable.
+              </p>
+            </div>
 
-          <p className="slide-15-elem" style={{ fontSize: '1.25rem', maxWidth: '820px', margin: '0 auto 2.5rem auto', color: 'rgba(255, 255, 255, 0.85)' }}>
-            We are crossing the threshold from an era of treating illness reactively to an era of engineering cures proactively. In this new world, no disease is permanently incurable.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2.5rem', textAlign: 'left' }}>
-            <div ref={card1Ref} className="biotech-card slide-15-elem" style={{ borderLeft: '3px solid var(--accent-cyan)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.75rem' }}>
+            <div ref={card1Ref} className="biotech-card slide-15-elem" style={{ borderLeft: '4px solid var(--accent-cyan)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
                 <Bot size={18} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>SELF-DRIVING LABORATORIES</span>
+                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>AUTONOMOUS SELF-DRIVING LABORATORIES</span>
               </div>
-              <h3 style={{ fontSize: '1.4rem', color: '#ffffff', marginBottom: '0.5rem' }}>AUTONOMOUS DISCOVERY</h3>
-              <p style={{ fontSize: '0.95rem' }}>
-                Robotic chemistry suites directed by LLMs and reinforcement learning algorithms execute continuous Design-Make-Test-Analyze cycles 24 hours a day, 365 days a year.
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+                Robotic chemistry suites directed by LLMs and reinforcement learning algorithms run continuous Design-Make-Test-Analyze experiments 24 hours a day with zero human fatigue.
               </p>
             </div>
 
-            <div ref={card2Ref} className="biotech-card slide-15-elem" style={{ borderLeft: '3px solid var(--accent-emerald)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-emerald)', marginBottom: '0.75rem' }}>
-                <Heart size={18} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>THE HUMAN PROMISE</span>
+            {/* Grand Finale Stats */}
+            <div className="slide-15-elem" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+              <div className="stat-box" style={{ padding: '1rem 1.25rem' }}>
+                <div className="stat-number" style={{ color: 'var(--accent-cyan)', fontSize: '2.2rem' }}>100X</div>
+                <div className="stat-label">Discovery Velocity</div>
               </div>
-              <h3 style={{ fontSize: '1.4rem', color: '#ffffff', marginBottom: '0.5rem' }}>DISEASE ERADICATION</h3>
-              <p style={{ fontSize: '0.95rem' }}>
-                Future outbreaks neutralized in weeks. Tailored mRNA immunotherapies curing rare pediatric conditions. A healthier, longer life accessible to every corner of the globe.
-              </p>
+              <div className="stat-box" style={{ padding: '1rem 1.25rem' }}>
+                <div className="stat-number" style={{ color: 'var(--accent-emerald)', fontSize: '2.2rem' }}>-70%</div>
+                <div className="stat-label">R&D Cost Collapse</div>
+              </div>
+              <div className="stat-box" style={{ padding: '1rem 1.25rem' }}>
+                <div className="stat-number" style={{ color: '#ffffff', fontSize: '2.2rem' }}>BILLIONS</div>
+                <div className="stat-label">Lives Saved</div>
+              </div>
             </div>
           </div>
 
-          {/* Grand Finale Stats */}
-          <div className="slide-15-elem" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', maxWidth: '900px', margin: '0 auto' }}>
-            <div className="stat-box" style={{ textAlign: 'center' }}>
-              <div className="stat-number" style={{ color: 'var(--accent-cyan)', fontSize: '2.4rem' }}>100X</div>
-              <div className="stat-label">Discovery Speed Multiplier</div>
-            </div>
-            <div className="stat-box" style={{ textAlign: 'center' }}>
-              <div className="stat-number" style={{ color: 'var(--accent-emerald)', fontSize: '2.4rem' }}>-70%</div>
-              <div className="stat-label">R&D Capital Cost Collapse</div>
-            </div>
-            <div className="stat-box" style={{ textAlign: 'center' }}>
-              <div className="stat-number" style={{ color: '#ffffff', fontSize: '2.4rem' }}>BILLIONS</div>
-              <div className="stat-label">Of Lives Positively Impacted</div>
-            </div>
+          {/* Right Column: Autonomous DMTA Closed-Loop Visual */}
+          <div className="slide-15-elem" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <AutonomousLoop />
           </div>
 
         </div>

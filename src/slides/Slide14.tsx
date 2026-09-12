@@ -1,16 +1,16 @@
 import type { SlideProps } from '../types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { Globe, Eye, Scale } from 'lucide-react';
+import { EthicalGuardrailsVisual } from '../components/visuals/EthicalGuardrailsVisual';
+import { Scale, Globe, Eye } from 'lucide-react';
 
 const Slide14: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
-  const card3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    onTotalStepsChange(4);
+    onTotalStepsChange(3);
   }, [onTotalStepsChange]);
 
   useEffect(() => {
@@ -29,79 +29,80 @@ const Slide14: React.FC<SlideProps> = ({ isActive, currentStep, onTotalStepsChan
   useEffect(() => {
     if (!isActive) return;
 
-    const cards = [card1Ref.current, card2Ref.current, card3Ref.current];
-    cards.forEach((card, idx) => {
-      if (!card) return;
-      if (currentStep === 0) {
-        gsap.to(card, { opacity: 1, scale: 1, borderColor: 'rgba(255, 255, 255, 0.08)', duration: 0.3 });
-      } else if (currentStep === idx + 1) {
-        gsap.to(card, { opacity: 1, scale: 1.02, borderColor: idx === 0 ? '#f43f5e' : 'var(--accent-cyan)', duration: 0.3 });
-      } else {
-        gsap.to(card, { opacity: 0.5, scale: 0.98, borderColor: 'rgba(255, 255, 255, 0.08)', duration: 0.3 });
-      }
-    });
+    if (currentStep === 1) {
+      gsap.to(card1Ref.current, { borderColor: '#f43f5e', scale: 1.02, duration: 0.3 });
+      gsap.to(card2Ref.current, { opacity: 0.5, scale: 0.98, duration: 0.3 });
+    } else if (currentStep === 2) {
+      gsap.to(card1Ref.current, { borderColor: 'rgba(255, 255, 255, 0.08)', opacity: 0.7, scale: 1, duration: 0.3 });
+      gsap.to(card2Ref.current, { borderColor: 'var(--accent-cyan)', opacity: 1, scale: 1.02, duration: 0.3 });
+    } else {
+      gsap.to([card1Ref.current, card2Ref.current], { borderColor: 'rgba(255, 255, 255, 0.08)', opacity: 1, scale: 1, duration: 0.3 });
+    }
   }, [currentStep, isActive]);
 
   return (
     <div ref={containerRef} className="slide-container">
       <div className="slide-content">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5rem', alignItems: 'center' }}>
           
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div className="biotech-badge biotech-badge-rose slide-14-elem">
-              <Scale size={13} />
-              RESPONSIBLE INNOVATION
+          {/* Left Column: Narrative & Ethical Mandates */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <div className="biotech-badge biotech-badge-rose slide-14-elem">
+                <Scale size={13} />
+                RESPONSIBLE INNOVATION
+              </div>
+              <h2 className="gradient-title-rose slide-14-elem" style={{ fontSize: '3.5rem', lineHeight: 1.05, marginBottom: '0.85rem' }}>
+                THE ETHICAL FRONTIER: SAFETY & EQUITY
+              </h2>
+              <p className="slide-14-elem" style={{ fontSize: '1.15rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+                With immense computational power comes profound medical responsibility. We must ensure algorithms are free of bias, fully explainable, and accessible to all of humanity.
+              </p>
             </div>
-            <h2 className="gradient-title-rose slide-14-elem" style={{ fontSize: '3.6rem', marginBottom: '0.75rem' }}>
-              THE ETHICAL FRONTIER: SAFETY & EQUITY
-            </h2>
-            <p className="slide-14-elem" style={{ fontSize: '1.2rem', maxWidth: '820px', margin: '0 auto' }}>
-              With immense computational power comes profound medical responsibility. We must ensure algorithms are free of bias, fully explainable, and accessible to all of humanity.
-            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div ref={card1Ref} className="biotech-card slide-14-elem" style={{ borderLeft: '3px solid #f43f5e' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#f43f5e', marginBottom: '0.4rem' }}>
+                  <Globe size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>GENOMIC INCLUSION</span>
+                </div>
+                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '1.1rem', marginBottom: '0.3rem' }}>
+                  ELIMINATING ANCESTRY BIAS
+                </div>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  Over 78% of historical genetic data came from European ancestries. AI must be trained on diverse global genomes so that therapies work safely for every population on Earth.
+                </p>
+              </div>
+
+              <div ref={card2Ref} className="biotech-card slide-14-elem" style={{ borderLeft: '3px solid var(--accent-cyan)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
+                  <Eye size={16} />
+                  <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>EXPLAINABILITY (XAI)</span>
+                </div>
+                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '1.1rem', marginBottom: '0.3rem' }}>
+                  NO "BLACK BOX" MEDICINE
+                </div>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  Clinicians and regulatory bodies must understand the biological "why". AI systems must provide atomic-level rationale and verifiable causal mechanisms.
+                </p>
+              </div>
+            </div>
+
+            <div className="slide-14-elem" style={{ display: 'flex', gap: '1rem' }}>
+              <div className="stat-box" style={{ flex: 1 }}>
+                <div className="stat-number" style={{ color: 'var(--accent-emerald)', fontSize: '2.2rem' }}>100%</div>
+                <div className="stat-label">Multi-Ancestry Validation</div>
+              </div>
+              <div className="stat-box" style={{ flex: 1 }}>
+                <div className="stat-number" style={{ color: 'var(--accent-cyan)', fontSize: '2.2rem' }}>-70%</div>
+                <div className="stat-label">Global Treatment Cost</div>
+              </div>
+            </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2.5rem' }}>
-            <div ref={card1Ref} className="biotech-card slide-14-elem" style={{ borderTop: '3px solid #f43f5e' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#f43f5e', marginBottom: '0.75rem' }}>
-                <Globe size={18} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>GENOMIC INCLUSION</span>
-              </div>
-              <h3 style={{ fontSize: '1.3rem', color: '#ffffff', marginBottom: '0.5rem' }}>ELIMINATING DATA BIAS</h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                Over 78% of historical genetic research came from European ancestry. AI must train on diverse global populations so that cures work with equal efficacy for every human being.
-              </p>
-            </div>
-
-            <div ref={card2Ref} className="biotech-card slide-14-elem" style={{ borderTop: '3px solid var(--accent-cyan)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', marginBottom: '0.75rem' }}>
-                <Eye size={18} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>TRANSPARENCY</span>
-              </div>
-              <h3 style={{ fontSize: '1.3rem', color: '#ffffff', marginBottom: '0.5rem' }}>NO "BLACK BOX" MEDICINE</h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                When recommending treatments, AI cannot just output an answer—it must provide clear molecular and biological rationales that doctors and the FDA can verify and trust.
-              </p>
-            </div>
-
-            <div ref={card3Ref} className="biotech-card slide-14-elem" style={{ borderTop: '3px solid var(--accent-emerald)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-emerald)', marginBottom: '0.75rem' }}>
-                <Scale size={18} />
-                <span className="mono-text" style={{ fontSize: '0.75rem', fontWeight: 700 }}>AFFORDABILITY</span>
-              </div>
-              <h3 style={{ fontSize: '1.3rem', color: '#ffffff', marginBottom: '0.5rem' }}>DEMOCRATIZING ACCESS</h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                By collapsing $2.6B development costs by 70%, AI enables affordable medications for rare, neglected tropical diseases and underfunded healthcare systems globally.
-              </p>
-            </div>
-          </div>
-
-          <div className="biotech-card slide-14-elem" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 2rem', background: 'rgba(255, 255, 255, 0.02)' }}>
-            <div className="mono-text" style={{ fontSize: '0.8rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>
-              ✓ FDA & WHO GUIDANCE ALIGNED
-            </div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Rigorous double-blind clinical trials remain the gold standard before any AI medicine reaches patient hands.
-            </div>
+          {/* Right Column: Ethical Guardrails Visualizer */}
+          <div className="slide-14-elem" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <EthicalGuardrailsVisual />
           </div>
 
         </div>
